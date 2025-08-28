@@ -8,9 +8,22 @@ import { getMeServer } from '@/lib/api/serverApi';
 //     params: Promise<{user: User}>
 // }
 
-const Profile = async () => {
+export const dynamic = 'force-dynamic';
 
-    const { username, email } = await getMeServer();
+
+const Profile = async () => {
+    let user;
+    try {
+        user = await getMeServer();
+    } catch (error) {
+        console.error('Failed to load profile:', error);
+    }
+
+    if (!user) {
+        return <p>User not found or not authenticated.</p>;
+    }
+    
+    const { username, email } = user;
 
   return (
     <main className={css.mainContent}>
