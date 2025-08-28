@@ -22,7 +22,7 @@ const AuthNavigation = () => {
 
         } finally {
             clearIsAuthenticated();
-            router.push('/login');
+            router.push('/sign-in');
         }
     };
 

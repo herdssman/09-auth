@@ -1,10 +1,10 @@
 'use client'
 
-import css from './AuthProvider.module.css'
+// import css from './AuthProvider.module.css'
 import { checkSession, getMe } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 interface AuthProps {
     children: React.ReactNode;
@@ -12,8 +12,6 @@ interface AuthProps {
 
 const AuthProvider = ({ children }: AuthProps) => {
     
-
-    const [loading, setLoading] = useState(false);
     const setUser = useAuthStore((state) => state.setUser);
     const clearIsAuthenticated = useAuthStore((state) => state.clearIsAuthenticated);
     const pathname = usePathname();
@@ -22,7 +20,6 @@ const AuthProvider = ({ children }: AuthProps) => {
         if (typeof window === 'undefined') return;
         
         const verifySession = async () => {
-            setLoading(true);
 
             const isAuthenticated = await checkSession();
 
@@ -36,19 +33,18 @@ const AuthProvider = ({ children }: AuthProps) => {
             } else {
                 clearIsAuthenticated();
             }
-            setLoading(false);
         };
         verifySession();
 
     }, [setUser, clearIsAuthenticated, pathname]);
 
-    if (loading) {
-        return (
-            <div className={css.cont}>
-                <div className={css.loader}></div>
-            </div>
-        )
-    }
+    // if (loading) {
+    //     return (
+    //         <div className={css.cont}>
+    //             <div className={css.loader}></div>
+    //         </div>
+    //     )
+    // }
 
     return children;
 };

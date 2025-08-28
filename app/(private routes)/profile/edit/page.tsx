@@ -63,12 +63,11 @@ const EditPage = () => {
         <input id="username"
           type="text"
           className={css.input}
-          value={username}
           onChange={handleChange}
         />
       </div>
 
-                  <p>Email: {email}</p>
+        <p>Email: {email}</p>
 
       <div className={css.actions}>
         <button type="submit" className={css.saveButton}>

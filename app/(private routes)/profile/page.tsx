@@ -1,28 +1,29 @@
 import css from './ProfilePage.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
-import { User } from '@/types/user';
+// import { User } from '@/types/user';
+import { getMeServer } from '@/lib/api/serverApi';
 
-interface PageProps {
-    params: Promise<{user: User}>
-}
+// interface PageProps {
+//     params: Promise<{user: User}>
+// }
 
-const Profile = async ({params}: PageProps) => {
+const Profile = async () => {
 
-    const { user } = await params;
+    const { username, email } = await getMeServer();
 
   return (
     <main className={css.mainContent}>
   <div className={css.profileCard}>
       <div className={css.header}>
 	     <h1 className={css.formTitle}>Profile Page</h1>
-	     <Link href='/edit' className={css.editProfileButton}>
+	     <Link href='/profile/edit' className={css.editProfileButton}>
 	       Edit Profile
 	     </Link>
 	   </div>
      <div className={css.avatarWrapper}>
       <Image
-        src="Avatar"
+        src="/avatar.png"
         alt="User Avatar"
         width={120}
         height={120}
@@ -31,10 +32,10 @@ const Profile = async ({params}: PageProps) => {
     </div>
     <div className={css.profileInfo}>
       <p>
-        Username: {user.username}
+        Username: {username}
       </p>
       <p>
-        Email: {user.email}
+        Email: {email}
       </p>
     </div>
   </div>
@@ -44,16 +45,16 @@ const Profile = async ({params}: PageProps) => {
 
 export default Profile;
 
-export const generateMetadata = async ({ params }: PageProps) => {
+export const generateMetadata = async () => {
 
-    const { user } = await params;
+    const { username } = await getMeServer();
 
     return {
-        title: `${user.username} profile`,
-        description: `Take a look at ${user.username}'s proifile`,
+        title: `${username} profile`,
+        description: `Take a look at ${username}'s proifile`,
         openGraph: {
-            title: `${user.username} profile`,
-            description: `Take a look at ${user.username}'s proifile`,
+            title: `${username} profile`,
+            description: `Take a look at ${username}'s proifile`,
             url: `/users/me`,
             siteName: 'NoteHub',
             images: [{
@@ -62,7 +63,7 @@ export const generateMetadata = async ({ params }: PageProps) => {
                 height: 630,
                 alt: 'NoteHub app',
             }],
-            type: 'websitarticlee',
+            type: 'article',
         }
     }
 }

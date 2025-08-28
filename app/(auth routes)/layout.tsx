@@ -21,3 +21,5 @@ export const AuthLayout = ({ children }: Props) => {
         {loading ? <div className={css.loader}></div> : children}
         </>
 }
+
+export default AuthLayout;

@@ -73,7 +73,7 @@ export const checkServerSession = async ():Promise<AxiosResponse> => {
 
 
 
-export const getMeServer = async (): Promise<User | null> => {
+export const getMeServer = async (): Promise<User> => {
 
     try {
         const cookieStore = cookies(); 
@@ -85,8 +85,7 @@ export const getMeServer = async (): Promise<User | null> => {
         });
       return res.data;
       
-    } catch (error) {
-        console.error('Failed to fetch user on server:', error);
-        return null;
-  }
+    } catch {
+        throw new Error('Failed to load profile. Please ensure your connection and try again')
+    }
 };
