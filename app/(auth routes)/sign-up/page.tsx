@@ -1,10 +1,10 @@
 'use client'
 
 import css from './SignUpPage.module.css'
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { register } from '@/lib/api/clientApi';
 import { ApiError } from '@/types/error';
-import { RegisterLoginRequest } from '@/types/signIn-signUp';
+import { RegisterRequest } from '@/types/signIn-signUp';
 import { useState } from 'react';
 
 const SignUp = () => {
@@ -15,7 +15,7 @@ const SignUp = () => {
     const handleSubmit = async (formData: FormData) => {
         try {
             const raw = Object.fromEntries(formData);
-            const formValues = raw as unknown as RegisterLoginRequest;
+            const formValues = raw as unknown as RegisterRequest;
 
             const res = await register(formValues);
             if (res) {
@@ -34,13 +34,13 @@ const SignUp = () => {
         }
     }
 
-
-
-
   return (
     <main className={css.mainContent}>
   <h1 className={css.formTitle}>Sign up</h1>
-	<form className={css.form} action={handleSubmit}>
+          <form className={css.form} onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(new FormData(e.currentTarget));
+    }}>
     <div className={css.formGroup}>
       <label htmlFor="email">Email</label>
       <input id="email" type="email" name="email" className={css.input} required />

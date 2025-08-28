@@ -9,7 +9,6 @@ export default function Header() {
           <Link href="/" aria-label="Home">
             NoteHub
           </Link>
-          <AuthNavigation />
           <nav aria-label="Main Navigation">
             <ul className={css.navigation}>
               <li>
@@ -17,6 +16,9 @@ export default function Header() {
               </li>
               <li>
                 <TagsMenu />
+              </li>
+              <li>
+                <AuthNavigation />
               </li>
             </ul>
           </nav>

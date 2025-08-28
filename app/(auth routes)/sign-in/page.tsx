@@ -1,10 +1,10 @@
 'use client'
 
 import css from './SignInPage.module.css'
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { login } from '@/lib/api/clientApi';
 import { ApiError } from '@/types/error';
-import { RegisterLoginRequest } from '@/types/signIn-signUp';
+import { LoginRequest } from '@/types/signIn-signUp';
 import { useState } from 'react';
 
 const SignIn = () => {
@@ -15,7 +15,7 @@ const SignIn = () => {
     const handleSubmit = async (formData: FormData) => {
         try {
             const raw = Object.fromEntries(formData);
-            const formValues = raw as unknown as RegisterLoginRequest;
+            const formValues = raw as unknown as LoginRequest;
 
             const res = await login(formValues);
             if (res) {
@@ -36,7 +36,10 @@ const SignIn = () => {
 
   return (
     <main className={css.mainContent}>
- <form className={css.form} action={handleSubmit}>
+      <form className={css.form} onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(new FormData(e.currentTarget));
+ }}>
     <h1 className={css.formTitle}>Sign in</h1>
 
     <div className={css.formGroup}>

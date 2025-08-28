@@ -2,7 +2,7 @@ import css from './SidebarNotes.module.css';
 import Link from 'next/link';
 import { Tag } from '@/types/tag';
 
-export const tags: Tag[] = ["Work", "Personal", "Meeting", "Shopping", "Important", "Ideas", "Travel", "Finance", "Health", "Todo"];
+export const tags: Tag[] = ["Work", "Personal", "Meeting", "Shopping", "Todo"];
 
 export const SidebarNotes = () => {
 

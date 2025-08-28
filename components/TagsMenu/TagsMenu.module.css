@@ -23,7 +23,6 @@
     position: absolute;
     top: calc(100% + 0);
     left: 0;
-    width: 20px;
     background-color: #333;
     border: 1px solid #ddd;
     border-radius: 8px;

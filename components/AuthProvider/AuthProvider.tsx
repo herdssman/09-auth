@@ -3,29 +3,26 @@
 import css from './AuthProvider.module.css'
 import { checkSession, getMe } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface AuthProps {
     children: React.ReactNode;
 }
 
-const privateRoutes =  ['/notes', '/profile']
-
 const AuthProvider = ({ children }: AuthProps) => {
     
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const setUser = useAuthStore((state) => state.setUser);
     const clearIsAuthenticated = useAuthStore((state) => state.clearIsAuthenticated);
-    const router = useRouter();
     const pathname = usePathname();
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
         
         const verifySession = async () => {
-            setIsLoading(true);
+            setLoading(true);
 
             const isAuthenticated = await checkSession();
 
@@ -38,20 +35,18 @@ const AuthProvider = ({ children }: AuthProps) => {
                 };
             } else {
                 clearIsAuthenticated();
-
-                if (privateRoutes.some((route) => pathname.startsWith(route))) {
-                    router.replace('/login');
-                }
             }
-            setIsLoading(false);
+            setLoading(false);
         };
         verifySession();
 
-    }, [setUser, clearIsAuthenticated, pathname, router]);
+    }, [setUser, clearIsAuthenticated, pathname]);
 
-    if (isLoading) {
+    if (loading) {
         return (
-            <div className={css.loader}></div>
+            <div className={css.cont}>
+                <div className={css.loader}></div>
+            </div>
         )
     }
 

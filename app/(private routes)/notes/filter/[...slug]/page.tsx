@@ -1,4 +1,4 @@
-import { fetchNotes } from '@/lib/api/clientApi';
+import { fetchNotesServer } from '@/lib/api/serverApi';
 import NotesClient from './Notes.client';
 import { Tag } from '@/types/tag';
 import { tags } from '../@sidebar/default';
@@ -12,16 +12,15 @@ export default async function NotesPage({ params }: SlugProps) {
     const search = '';
     const page = 1;
     const perPage = 12;
-    const sortBy = 'created';
     const rawTag = slug?.[0];
     const tag = rawTag === 'all' || !tags.includes(rawTag as Tag) ? undefined: (rawTag as Tag);
 
-    const { notes, totalPages } = await fetchNotes({
+    const { notes, totalPages } = await fetchNotesServer({
         search,
         page, 
         perPage,
-        sortBy,
-    }, tag)
+        tag,
+    })
 
     return (
         <div>

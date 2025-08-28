@@ -1,1 +1,1 @@
-export type Tag = "Work" | "Personal" | "Meeting" | "Shopping" | "Important" | "Ideas" | "Travel" | "Finance" | "Health" | "Todo";
+export type Tag = "Work" | "Personal" | "Meeting" | "Shopping" | "Todo";

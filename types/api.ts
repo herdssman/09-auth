@@ -15,3 +15,6 @@ export interface FetchNotesParams {
   
 export type Sort = 'created' | 'updated';
 
+export interface UpdateUserRequest {
+    username?: string;
+}

@@ -1,10 +1,12 @@
+'use client';
+
 import type { Note } from '../../types/note';
 import type { CreateNote } from '../../types/createNote'
 import { Tag } from '@/types/tag';
-import { NoteServiceProps, FetchNotesParams } from '@/types/api';
+import { NoteServiceProps, FetchNotesParams, UpdateUserRequest } from '@/types/api';
 import { nextServer } from './api';
 import { User } from '@/types/user';
-import { RegisterLoginRequest } from '@/types/signIn-signUp';
+import { RegisterRequest, LoginRequest } from '@/types/signIn-signUp';
 
 export async function fetchNotes({ search, page, perPage, sortBy }: FetchNotesParams, tag?: Tag): Promise<{ notes: Note[]; totalPages: number }> {
     
@@ -45,6 +47,19 @@ export async function createNote(newNote: CreateNote): Promise<Note> {
     }
 }
 
+export async function deleteNote(noteId: string): Promise<Note> {
+
+    try {
+        const response = await nextServer.delete<Note>(`/notes/${noteId}`,
+        );
+        
+        return response.data;
+
+    } catch {
+        throw new Error("Failed to delete note. Please ensure your connection and try again");
+    }
+}
+
 export async function fetchNoteById(id: string): Promise<Note> {
 
     try {
@@ -56,30 +71,45 @@ export async function fetchNoteById(id: string): Promise<Note> {
     }
 }
 
-export async function register(data: RegisterLoginRequest) {
+export async function register(data: RegisterRequest) {
 
     const res = await nextServer.post<User>('auth/register', data);
     return res.data;
 }
 
-export async function login(data: RegisterLoginRequest) {
+export async function login(data: LoginRequest) {
 
     const res = await nextServer.post<User>('/auth/login', data);
     return res.data;
+}
+
+export async function logout(): Promise<void> {
+
+    try {
+        await nextServer.post('auth/logout');
+
+    } catch {
+        throw new Error('Failed to logout. Please ensure your connection and try again');
+    }
 }
 
 type CheckSessionRequest = {
     success: boolean;
 }
 
-export async function checkSession() {
+export async function checkSession(): Promise<boolean> {
 
-    const res = await nextServer<CheckSessionRequest>('/auth/session');
-    return res.data;
+    const res = await nextServer.get<CheckSessionRequest>('/auth/session');
+    return res.data.success;
 }
 
-export async function getMe() {
+export async function getMe(): Promise<User> {
 
     const { data } = await nextServer.get<User>('/users/me');
-    return data
+    return data;
 } 
+
+export async function updateMe(data: UpdateUserRequest): Promise<User> {
+    const res = await nextServer.patch<User>('/users/me', data);
+    return res.data;
+}

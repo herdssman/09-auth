@@ -3,20 +3,10 @@
     height: 10px;
     background: radial-gradient(circle closest-side, #000 92%, #0000) calc(100%/3) 0/calc(100%/4) 100%;
     animation: l2 0.5s infinite linear;
-    position: absolute;
-    top: 50%;
-    left: 50%;
 }
 
 @keyframes l2 {
     100% {
         background-position: 0 0
     }
-}
-
-.cont {
-    flex-grow: 1;
-    height: 100%;
-    width: 100%;
-    position: relative;
 }
