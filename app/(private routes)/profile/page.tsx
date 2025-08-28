@@ -1,8 +1,16 @@
 import css from './ProfilePage.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
+import { User } from '@/types/user';
 
-const Profile = () => {
+interface PageProps {
+    params: Promise<{user: User}>
+}
+
+const Profile = async ({params}: PageProps) => {
+
+    const { user } = await params;
+
   return (
     <main className={css.mainContent}>
   <div className={css.profileCard}>
@@ -23,16 +31,38 @@ const Profile = () => {
     </div>
     <div className={css.profileInfo}>
       <p>
-        Username: your_username
+        Username: {user.username}
       </p>
       <p>
-        Email: your_email@example.com
+        Email: {user.email}
       </p>
     </div>
   </div>
 </main>
-
   )
 }
 
 export default Profile;
+
+export const generateMetadata = async ({ params }: PageProps) => {
+
+    const { user } = await params;
+
+    return {
+        title: `${user.username} profile`,
+        description: `Take a look at ${user.username}'s proifile`,
+        openGraph: {
+            title: `${user.username} profile`,
+            description: `Take a look at ${user.username}'s proifile`,
+            url: `/users/me`,
+            siteName: 'NoteHub',
+            images: [{
+                url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'NoteHub app',
+            }],
+            type: 'websitarticlee',
+        }
+    }
+}
