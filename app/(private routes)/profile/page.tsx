@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 // import { User } from '@/types/user';
 import { getMeServer } from '@/lib/api/serverApi';
+import { Metadata } from 'next';
 
 // interface PageProps {
 //     params: Promise<{user: User}>
@@ -23,7 +24,7 @@ const Profile = async () => {
         return <p>User not found or not authenticated.</p>;
     }
     
-    const { username, email } = user;
+    const { username, email, avatar} = user;
 
   return (
     <main className={css.mainContent}>
@@ -36,7 +37,7 @@ const Profile = async () => {
 	   </div>
      <div className={css.avatarWrapper}>
       <Image
-        src="/avatar.png"
+        src={avatar || '/avatar.png'}
         alt="User Avatar"
         width={120}
         height={120}
@@ -58,13 +59,13 @@ const Profile = async () => {
 
 export default Profile;
 
-export const generateMetadata = async () => {
+export const generateMetadata = async (): Promise<Metadata> => {
 
     const { username } = await getMeServer();
 
     return {
         title: `${username} profile`,
-        description: `Take a look at ${username}'s proifile`,
+        description: `Take a look at ${username}'s profile`,
         openGraph: {
             title: `${username} profile`,
             description: `Take a look at ${username}'s proifile`,

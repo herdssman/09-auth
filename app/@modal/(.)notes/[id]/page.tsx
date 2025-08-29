@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { fetchNoteById } from '@/lib/api/clientApi';
+import { fetchNoteByIdServer } from '@/lib/api/serverApi';
 import NotePreview from './NotePreview.client';
 
 interface ModalNotePreviewProps {
@@ -13,7 +13,7 @@ export default async function ModalNotePreview({ params }: ModalNotePreviewProps
 
     await queryClient.prefetchQuery({
         queryKey: ['note', id],
-        queryFn: () => fetchNoteById(id)
+        queryFn: () => fetchNoteByIdServer(id)
     });
 
 	return (

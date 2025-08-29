@@ -9,9 +9,10 @@ import { useRouter } from 'next/navigation';
 const EditPage = () => {
 
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [avatar, setAvatar] = useState('');
     const [initialUsername, setInitialUsername] = useState('');
     const router = useRouter();
-    const [email, setEmail] = useState('');
 
 
     useEffect(() => {
@@ -21,7 +22,8 @@ const EditPage = () => {
 
             setUsername(name);
             setInitialUsername(name);
-            setEmail(userEmail)
+            setEmail(userEmail);
+            setAvatar(user.avatar ?? '');
         })
     }, []);
 
@@ -50,7 +52,7 @@ const EditPage = () => {
   <div className={css.profileCard}>
     <h1 className={css.formTitle}>Edit Profile</h1>
 
-    <Image src="/avatar.png"
+    <Image src={avatar || '/avatar.png'}
       alt="User Avatar"
       width={120}
       height={120}
@@ -63,6 +65,7 @@ const EditPage = () => {
         <input id="username"
           type="text"
           className={css.input}
+          value={username} 
           onChange={handleChange}
         />
       </div>
