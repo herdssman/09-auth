@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react';
 import { getMe, updateMe } from '@/lib/api/clientApi';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store/authStore';
 
 const EditPage = () => {
 
@@ -13,6 +14,7 @@ const EditPage = () => {
     const [avatar, setAvatar] = useState('');
     const [initialUsername, setInitialUsername] = useState('');
     const router = useRouter();
+const setUser = useAuthStore((state) => state.setUser);
 
 
     useEffect(() => {
@@ -34,7 +36,8 @@ const EditPage = () => {
     const handleSaveUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await updateMe({ username });
+            const updatedUser = await updateMe({ username });
+setUser(updatedUser);
             router.push('/profile');
         } catch {
             throw new Error('Failed to save changes. Please ensure your connection and try again')
@@ -73,7 +76,7 @@ const EditPage = () => {
         <p>Email: {email}</p>
 
       <div className={css.actions}>
-        <button type="submit" className={css.saveButton}>
+        <button type="submit" className={css.saveButton} disabled={username === initialUsername}>
           Save
         </button>
         <button type="button" className={css.cancelButton} onClick={handleCancel}>
