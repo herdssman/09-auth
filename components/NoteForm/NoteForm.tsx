@@ -54,7 +54,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
 
     const handleValidation = async (): Promise<boolean> => {
         try {
-            await validationSchema.validate(values, { abortEarly: false });
+            await validationSchema.validate(draft || initialValues, { abortEarly: false });
             setErrors({});
             return true;
         } catch (error: unknown) {
@@ -78,9 +78,9 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
 
         setIsSubmitting(true);
 
-        mutation.mutate(values, {
+        mutation.mutate(draft!, {
             onSuccess: async () => {
-                setValues(initialValues)
+clearDraft();
                 setIsSubmitting(false);
                 await queryClient.invalidateQueries({ queryKey: ["notes"] });
                 if (onSuccess) onSuccess();
@@ -93,19 +93,17 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
         });
     };
 
-    useEffect(() => {
-        if (draft && values === initialValues) {
-            setValues(draft);
-        }
-    }, [draft, values]);
-
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setValues(prev => ({ ...prev, [name]: value }));
-        setDraft({ ...draft, [e.target.name]: e.target.value, });
+        setDraft(prev => ({ ...prev, [name]: value }));
     };
 
+useEffect(() => {
+    if (!draft) {
+      setDraft(initialValues);
+    }
+  }, [draft, setDraft]);
 
     return (
         <form className={css.form} onSubmit={handleSubmit}>
@@ -117,7 +115,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
                     name="title"
                     type="text"
                     className={css.input}
-                    value={values.title}
+                    value={draft?.title || ''}
                     onChange={handleChange}
                 />
                 {errors.title && <span className={css.error}>{errors.title}</span>}
@@ -130,7 +128,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
                     name="content"
                     rows={8}
                     className={css.textarea}
-                    value={values.content}
+                    value={draft?.content || ''}
                     onChange={handleChange}
                 />
                 {errors.content && <span className={css.error}>{errors.content}</span>}
@@ -142,7 +140,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
                     id="tag"
                     name="tag"
                     className={css.select}
-                    value={values.tag}
+                    value={draft?.tag || 'Todo'}
                     onChange={handleChange}
                 >
                     <option value="Todo">Todo</option>
