@@ -68,7 +68,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
         description: `Take a look at ${username}'s profile`,
         openGraph: {
             title: `${username} profile`,
-            description: `Take a look at ${username}'s proifile`,
+            description: `Take a look at ${username}'s profile`,
             url: `/users/me`,
             siteName: 'NoteHub',
             images: [{

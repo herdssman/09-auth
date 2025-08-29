@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware';
 
 interface NoteDraftStore {
     draft: NoteFormValues;
-    setDraft: (partial: Partial<NoteFormValues>) => void;
+    setDraft: (partial: Partial<NoteFormValues> | ((prevDraft: NoteFormValues) => NoteFormValues)) => void;
     clearDraft: () => void;
 }
 
