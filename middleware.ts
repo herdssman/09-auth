@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { checkServerSession } from "./lib/api/serverApi";
-import { parse } from "cookie";
  
 
 const privateRoutes = ['/profile', '/notes'];
@@ -28,13 +27,10 @@ export async function middleware(request: NextRequest) {
 
                 const response = NextResponse.next();
                 
-                for (const cookieStr of cookieArray) {
-                    const parsed = parse(cookieStr);
-                    
-                    if (parsed.accessToken) response.headers.append('Set-Cookie', `accessToken=${parsed.accessToken}; Path=/; HttpOnly`);
-                    
-                    if (parsed.refreshToken) response.headers.append('Set-Cookie', `refreshToken=${parsed.refreshToken}; Path=/; HttpOnly`);
-                }
+                cookieArray.forEach((cookieHeader) => {
+                    response.headers.append('Set-Cookie', cookieHeader);
+                });
+                
                 if (isPublicRoute) {
              
                     return NextResponse.redirect(new URL('/', request.url), {
@@ -43,6 +39,13 @@ export async function middleware(request: NextRequest) {
                 }
                 if (isPrivateRoute) {
                     return response;
+                }
+
+                return response;
+            } else {
+
+                if (isPrivateRoute) {
+                    return NextResponse.redirect(new URL('/sign-in', request.url));
                 }
             }
         }
@@ -55,7 +58,10 @@ export async function middleware(request: NextRequest) {
     }
 
     if (accessToken && isPublicRoute) {
-        return NextResponse.redirect(new URL('/profile', request.url));
+        return NextResponse.redirect(new URL('/', request.url));
+    }
+    if (!accessToken && isPublicRoute) {
+        return NextResponse.redirect(new URL('/sign-in', request.url));
     }
 
     return NextResponse.next();
