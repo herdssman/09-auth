@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware';
 
 interface NoteDraftStore {
     draft: NoteFormValues;
-    setDraft: (note: NoteFormValues) => void;
+    setDraft: (partial: Partial<NoteFormValues>) => void;
     clearDraft: () => void;
 }
 
@@ -20,7 +20,8 @@ export const useNoteDraftStore = create<NoteDraftStore>()(
     
     persist((set) => ({
         draft: initialDraft,
-        setDraft: (note) => set(() => ({ draft: note })),
+        setDraft: (partial) =>
+        set((state) => ({ draft: { ...state.draft, ...partial } })),
         clearDraft: () => set(() => ({ draft: initialDraft })),
     }),
         {

@@ -5,7 +5,7 @@ import { createNote } from '../../lib/api/clientApi';
 import type { CreateNote } from '../../types/createNote';
 import * as Yup from 'yup';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { NoteFormValues } from '@/types/NoteFormValues';
 import { useNoteDraftStore } from '@/lib/store/noteStore';
@@ -39,7 +39,6 @@ interface NoteFormProps {
 
 export default function NoteForm({ onSuccess }: NoteFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [values, setValues] = useState<NoteFormValues>(initialValues);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const queryClient = useQueryClient();
@@ -78,14 +77,12 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
 
         setIsSubmitting(true);
 
-        mutation.mutate(draft!, {
+        mutation.mutate(draft, {
             onSuccess: async () => {
-clearDraft();
-                setIsSubmitting(false);
-                await queryClient.invalidateQueries({ queryKey: ["notes"] });
-                if (onSuccess) onSuccess();
+                await queryClient.invalidateQueries({ queryKey: ['notes'] });
                 clearDraft();
-                router.back()
+                if (onSuccess) onSuccess();
+                router.back();
             },
             onError: () => {
                 setIsSubmitting(false);
@@ -96,14 +93,9 @@ clearDraft();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setDraft(prev => ({ ...prev, [name]: value }));
+        setDraft({[name]: value});
     };
-
-useEffect(() => {
-    if (!draft) {
-      setDraft(initialValues);
-    }
-  }, [draft, setDraft]);
+    
 
     return (
         <form className={css.form} onSubmit={handleSubmit}>
