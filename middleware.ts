@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
                 cookieArray.forEach((cookieHeader) => {
                     response.headers.append('Set-Cookie', cookieHeader);
                 });
-                
+
                 if (isPublicRoute) {
              
                     return NextResponse.redirect(new URL('/', request.url), {
@@ -42,26 +42,29 @@ export async function middleware(request: NextRequest) {
                 }
 
                 return response;
+                
             } else {
-
-                if (isPrivateRoute) {
-                    return NextResponse.redirect(new URL('/sign-in', request.url));
+                if (isPublicRoute) {
+                    return NextResponse.next();
                 }
             }
+
+        } else {
+            if (isPublicRoute) {
+                return NextResponse.next();
+            }
         }
-        if (isPublicRoute) {
-            return NextResponse.next();
-        }
+
         if (isPrivateRoute) {
             return NextResponse.redirect(new URL('/sign-in',request.url));
         }
+
+        return NextResponse.redirect(new URL('/sign-in', request.url));
+
     }
 
     if (accessToken && isPublicRoute) {
         return NextResponse.redirect(new URL('/', request.url));
-    }
-    if (!accessToken && isPublicRoute) {
-        return NextResponse.redirect(new URL('/sign-in', request.url));
     }
 
     return NextResponse.next();
