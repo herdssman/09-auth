@@ -93,10 +93,7 @@ export default function NoteForm({ onSuccess }: NoteFormProps) {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setDraft(prevDraft => ({
-        ...prevDraft,
-        [name]: value
-    }));
+        setDraft({ [name]: value });
     };
     
 
